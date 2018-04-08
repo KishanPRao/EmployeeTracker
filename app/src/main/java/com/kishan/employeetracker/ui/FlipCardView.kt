@@ -19,91 +19,167 @@ import com.kishan.employeetracker.R
 class FlipCardView : View {
 	companion object {
 		private val TAG = FlipCardView::class.java.simpleName
+		
+		private const val TEXT_COLOR = Color.WHITE
+		private const val CARD_COLOR = Color.DKGRAY
+		private const val BG_COLOR = Color.TRANSPARENT
+//		private const val BG_COLOR = Color.BLUE
+		
+		private const val SHADOW_COLOR = Color.BLACK
+		//		private const val SHADOW_COLOR = Color.YELLOW
+		private const val SHADOW_RADIUS = 5.0f
+		private const val SHADOW_X_OFFSET = 2.0f
+		private const val SHADOW_Y_OFFSET = 2.0f
+		
+		private const val MAX_TIME_MS = 2 * 1000
+		private const val SINGLE_CARD_AMOUNT = 180.0f
 	}
 	
 	private val mTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-	private var mRotation = 1.0f
+	private var mPadding: Float
+	private var mCornerSize: Float
+	
+	private val mRect = RectF()
+	private val mMatrix = Matrix()
+	private val mCamera = Camera()
+	
+	private var mText = "0"
+	private var mTextSecond = "0"
+	private var mTextCount = -1
+	var text = 30
+	
+	//	private val SINGLE_CARD_AMOUNT = 90.0f
+	private var mRotation = -1.0f
+	private var mRotationFinished = -1.0f
+	private var MAX_LIMIT = 80.0f
+	
+	private var mIncrement = 1.0f
+	//	private val MAX_TIME_MS = 4 * 1000
+	private var mStartTime = -1
+	
+	//	private val mInterpolator = PathInterpolator(0.2f, 0.0f, 0.2f, 1.0f)
+//	private val mInterpolator = PathInterpolator(0.2f, 0.2f, 0.9f, 1.0f)
+	private val mInterpolator = PathInterpolator(0.2f, 0.0f, 0.0f, 1.0f)
+	
+	private var mInitialized = false
 	
 	constructor(context: Context) : this(context, null)
 	
 	constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
 		mTextPaint.textSize = context.resources.getDimension(R.dimen.font_size)
-//		setLayerType(LAYER_TYPE_HARDWARE, mTextPaint)
+		mPadding = context.resources.getDimension(R.dimen.card_padding)
+		mCornerSize = mPadding / 5.0f
+		mTextPaint.setShadowLayer(SHADOW_RADIUS, SHADOW_X_OFFSET, SHADOW_Y_OFFSET, SHADOW_COLOR)
 	}
 	
-	private val mRect = RectF()
-	private val mMatrix = Matrix()
-	private val mCamera = Camera()
-	private val mFactor = 3.5f
-	
-	private var mText = "1"
-	private var mTextCount = 1
-	private var mIncrement = 1.0f
-	private var mMax = 100
-	private var mIncrTimes = 30
-	//	TODO
-//	private val pathInterpolator = PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f)
-//	private val pathInterpolator = PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f)
-	private val pathInterpolator = PathInterpolator(0.2f, 1.0f, 0.4f, 0.0f)
-	
-	private fun updateIncrement(): Boolean {
-//		val t = 0.0f
-		/*val t = (mTextCount / mIncrTimes.toFloat())
-		val value = pathInterpolator.getInterpolation(t)
-		mIncrement = (value * mIncrTimes) * 10
-		Log.d(TAG, "updateIncrement, $t -> $value, $mIncrement")*/
-		val diff = mIncrTimes - mTextCount
-		mIncrement = diff * mFactor * mFactor
-		Log.d(TAG, "updateIncrement $mIncrement")
-		return mIncrement != 0.0f
-	}
-	
-	/*	*/
-	override fun onDraw(canvas: Canvas) {
-		val isLesserThan180 = mRotation < 180.0f
-		mRotation = (mRotation + mIncrement) % 360.0f
-		
-		if (mRotation >= 180.0f && isLesserThan180) {
-			mTextCount++
-			mText = mTextCount.toString()
-		}
-		
-		val cx = this.measuredWidth / 2.0f
-		val cy = this.measuredHeight / 2.0f
-		
-		mRect.set(0.0f, 0.0f, width.toFloat(), height.toFloat())
+	private fun drawCard(text: String, angle: Float, xPos: Float, yPos: Float, canvas: Canvas) {
 		mCamera.save()
 		mMatrix.reset()
-		mCamera.rotateX(mRotation)
+		mCamera.rotateX(angle)
 		mCamera.getMatrix(mMatrix)
 		mCamera.restore()
 		
 		mMatrix.preTranslate(-cx, -cy)
 		mMatrix.postTranslate(cx, cy)
 		
-		canvas.drawColor(Color.BLUE)
-		val xPos = (canvas.width / 2.0f) - (mTextPaint.measureText(mText) / 2.0f)
-		val yPos = (canvas.height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
-		
 		canvas.save()
 		canvas.matrix = mMatrix
+		val oldShader = mTextPaint.shader
+		mTextPaint.shader = mGradientShader
+
+//		mTextPaint.color = CARD_COLOR
+		canvas.drawRoundRect(mRect, mCornerSize, mCornerSize, mTextPaint)
 		
-		mTextPaint.color = Color.RED
-		canvas.drawRoundRect(mRect, 0.0f, 0.0f, mTextPaint)
-		
-		if (mRotation < 90.0f || mRotation > 270.0f) {
-			mTextPaint.color = Color.WHITE
-			canvas.drawText(mText, xPos, yPos, mTextPaint)
-		}
+		mTextPaint.shader = oldShader
+		mTextPaint.color = TEXT_COLOR
+//		mTextPaint.setShadowLayer(0.0f, 0.0f, 0.0f, SHADOW_COLOR)
+		canvas.drawText(text, xPos, yPos, mTextPaint)
 		
 		canvas.restore()
-//		if (updateIncrement() || (mTextCount == mIncrTimes && mRotation != 0.0f))
-		if (updateIncrement())
-//		updateIncrement()
-			invalidate()
+	}
+	
+	private fun drawFirstCard(canvas: Canvas) {
+		drawCard(mText, mRotation, xPos, yPos, canvas)
+	}
+	
+	private fun drawSecondCard(canvas: Canvas) {
+		drawCard(mTextSecond, mRotation + 180, xPosSecond, yPosSecond, canvas)
+	}
+	
+	private fun updateIncrement() {
+		if (mStartTime == -1) {
+			mStartTime = System.currentTimeMillis().toInt()
+		}
+		val currentTime = System.currentTimeMillis().toInt()
+		val elapsed = (currentTime - mStartTime)
+		var amount = elapsed / MAX_TIME_MS.toFloat()
+		if (amount > 1.0f) {
+			amount = 1.0f
+		}
+		val amountModified = mInterpolator.getInterpolation(amount)
+//		Log.d(TAG, "updateIncrement, $amount -> $amountModified")
+		amount = amountModified
+		val totalRotation = SINGLE_CARD_AMOUNT * (text + 1)    //Starts from -1
+		val rotationForCurrentTime = amount * totalRotation
+		val diff = rotationForCurrentTime - mRotationFinished
+		mIncrement = diff
+//		Log.d(TAG, "updateIncrement, $elapsed, $amount, $totalRotation")
+//		Log.d(TAG, "updateIncrement, Rotation: $rotationForCurrentTime, $mRotationFinished, $diff")
+	}
+	
+	private var cx = 0.0f
+	private var cy = 0.0f
+	private var xPos = 0.0f
+	private var yPos = 0.0f
+	private var xPosSecond = 0.0f
+	private var yPosSecond = 0.0f
+	private lateinit var mGradientShader: Shader
+	
+	private fun initValues() {
+		cx = this.measuredWidth / 2.0f
+		cy = this.measuredHeight / 2.0f
+		mRect.set(mPadding, mPadding, width - mPadding, height - mPadding)
+		val w = width.toFloat()
+		val h = height.toFloat()
+		val shaderColorStart = Color.LTGRAY
+		val shaderColorEnd = Color.DKGRAY
+		mGradientShader = LinearGradient(
+				w, 0.0f, w, h,
+				shaderColorStart, shaderColorEnd, Shader.TileMode.CLAMP)
+	}
+	
+	override fun onDraw(canvas: Canvas) {
+		if (!mInitialized) {
+			if (this.width <= 0 || this.measuredWidth <= 0) {
+				Log.w(TAG, "onDraw, bad width")
+				return
+			}
+			initValues()
+			mInitialized = true
+		}
+		updateIncrement()
+		mRotation = mRotation + mIncrement
+		mRotationFinished = mRotationFinished + mIncrement
+		if (mRotation >= 180.0f) {
+			mTextCount = (mTextCount + (mRotation / 180.0f).toInt())
+			mText = mTextCount.toString()
+			xPos = (canvas.width / 2.0f) - (mTextPaint.measureText(mText) / 2.0f)
+			yPos = (canvas.height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
+			mTextSecond = (mTextCount + 1).toString()
+			xPosSecond = (canvas.width / 2.0f) - (mTextPaint.measureText(mTextSecond) / 2.0f)
+			yPosSecond = (canvas.height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
+		}
+		mRotation %= 180
 		
-//		if (mTextCount == mIncrTimes && mRotation != 0.0f) {
-//			mIncrement = 3.0f
-//		}
+		canvas.drawColor(BG_COLOR)
+		
+		if (mRotation < 90) {
+			drawFirstCard(canvas)
+		} else {
+			drawSecondCard(canvas)
+		}
+		if (mIncrement != 0.0f) {
+			invalidate()
+		}
 	}
 }

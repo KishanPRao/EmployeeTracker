@@ -38,8 +38,8 @@ class NoticePeriodFragment : Fragment() {
 //		val days = period.days      //Includes end date TODO: Right?
 		val days = period.days - 1
 		Log.d(TAG, "onViewCreated, diff = { $years : $months : $days }")
-		first_text.text = years.toString()
-		second_text.text = months.toString()
-		third_text.text = days.toString()
+		first_text.text = years
+		second_text.text = months
+		third_text.text = days
 	}
 }

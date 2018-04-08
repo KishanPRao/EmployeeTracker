@@ -52,15 +52,39 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintTop_toTopOf="parent">
 		
-		<TextView
+		<!--<TextView-->
+			<!--android:id="@+id/first_text"-->
+			<!--android:layout_width="0dp"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:layout_weight="1"-->
+			<!--android:gravity="center"-->
+			<!--/>-->
+		
+		<com.kishan.employeetracker.ui.FlipCardView
 			android:id="@+id/first_text"
 			android:layout_width="0dp"
-			android:layout_height="wrap_content"
+			android:layout_height="@dimen/card_size"
 			android:layout_weight="1"
-			android:gravity="center"
+			android:layout_gravity="center"
 			/>
 		
-		<TextView
+		<com.kishan.employeetracker.ui.FlipCardView
+			android:id="@+id/second_text"
+			android:layout_width="0dp"
+			android:layout_height="@dimen/card_size"
+			android:layout_weight="1"
+			android:layout_gravity="center"
+			/>
+		
+		<com.kishan.employeetracker.ui.FlipCardView
+			android:id="@+id/third_text"
+			android:layout_width="0dp"
+			android:layout_height="@dimen/card_size"
+			android:layout_weight="1"
+			android:layout_gravity="center"
+			/>
+		
+		<!--<TextView
 			android:id="@+id/second_text"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
@@ -74,7 +98,7 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:gravity="center"
-			/>
+			/>-->
 	</LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
