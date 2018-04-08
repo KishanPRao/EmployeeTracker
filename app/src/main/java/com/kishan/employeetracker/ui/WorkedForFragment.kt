@@ -32,6 +32,17 @@ class WorkedForFragment : Fragment() {
 		return inflater.inflate(R.layout.fragment_worked_for, container, false)
 	}
 	
+	fun reset() {
+		first_text.reset()
+		second_text.reset()
+		third_text.reset()
+	}
+	
+	override fun onResume() {
+		super.onResume()
+//		reset()
+	}
+	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		val period = Period(startDate, now, PeriodType.yearMonthDay())
 		val years = period.years

@@ -18,11 +18,12 @@ class FlipCardView : View {
 	companion object {
 		private val TAG = FlipCardView::class.java.simpleName
 		
-		private const val TEXT_COLOR = Color.WHITE
-		private const val CARD_COLOR = Color.DKGRAY
+		private const val TEXT_COLOR = Color.BLACK
+		private const val CARD_COLOR = Color.WHITE
 		private const val BG_COLOR = Color.TRANSPARENT
 		
-		private const val SHADOW_COLOR = Color.BLACK
+//		private const val SHADOW_COLOR = Color.BLACK
+		private const val SHADOW_COLOR = Color.TRANSPARENT
 		private const val SHADOW_RADIUS = 5.0f
 		private const val SHADOW_X_OFFSET = 2.0f
 		private const val SHADOW_Y_OFFSET = 2.0f
@@ -46,7 +47,7 @@ class FlipCardView : View {
 	var number = 1
 	
 	private var mRotation = -1.0f
-	private var mRotationFinished = -1.0f
+	private var mNumRotationFinished = -1.0f
 //	private var MAX_LIMIT = 80.0f   //Per onDraw increment. Beyond this animations looks horrible.
 	
 	private var mIncrement = 1.0f
@@ -59,6 +60,14 @@ class FlipCardView : View {
 	
 	private var mInitialized = false
 	
+	private var mCx = 0.0f
+	private var mCy = 0.0f
+	private var mXPos = 0.0f
+	private var mYPos = 0.0f
+	private var mXPosSecond = 0.0f
+	private var mYPosSecond = 0.0f
+	private lateinit var mGradientShader: Shader
+	
 	private fun createPathInterpolator(controlX1: Float,
 	                                   controlY1: Float,
 	                                   controlX2: Float,
@@ -67,6 +76,17 @@ class FlipCardView : View {
 	}
 	
 	constructor(context: Context) : this(context, null)
+	
+	fun reset() {
+		mStartTime = -1
+		mIncrement = 1.0f
+		mNumRotationFinished = -1.0f
+		mRotation = -1.0f
+		mTextCount = 0
+		mInitialized = false
+		
+		invalidate()
+	}
 	
 	constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
 		mTextPaint.textSize = context.resources.getDimension(R.dimen.font_size)
@@ -82,15 +102,15 @@ class FlipCardView : View {
 		mCamera.getMatrix(mMatrix)
 		mCamera.restore()
 		
-		mMatrix.preTranslate(-cx, -cy)
-		mMatrix.postTranslate(cx, cy)
+		mMatrix.preTranslate(-mCx, -mCy)
+		mMatrix.postTranslate(mCx, mCy)
 		
 		canvas.save()
 		canvas.matrix = mMatrix
 		val oldShader = mTextPaint.shader
-		mTextPaint.shader = mGradientShader
+//		mTextPaint.shader = mGradientShader
 
-//		mTextPaint.color = CARD_COLOR
+		mTextPaint.color = CARD_COLOR
 		canvas.drawRoundRect(mRect, mCornerSize, mCornerSize, mTextPaint)
 		
 		mTextPaint.shader = oldShader
@@ -101,11 +121,11 @@ class FlipCardView : View {
 	}
 	
 	private fun drawFirstCard(canvas: Canvas) {
-		drawCard(mText, mRotation, xPos, yPos, canvas)
+		drawCard(mText, mRotation, mXPos, mYPos, canvas)
 	}
 	
 	private fun drawSecondCard(canvas: Canvas) {
-		drawCard(mTextSecond, mRotation + 180, xPosSecond, yPosSecond, canvas)
+		drawCard(mTextSecond, mRotation + 180, mXPosSecond, mYPosSecond, canvas)
 	}
 	
 	private fun updateIncrement() {
@@ -123,32 +143,24 @@ class FlipCardView : View {
 		amount = amountModified
 		val totalRotation = SINGLE_CARD_AMOUNT * number
 		val rotationForCurrentTime = amount * totalRotation
-		val diff = rotationForCurrentTime - mRotationFinished
+		val diff = rotationForCurrentTime - mNumRotationFinished
 		mIncrement = diff
 //		Log.d(TAG, "updateIncrement, $elapsed, $amount, $totalRotation")
-//		Log.d(TAG, "updateIncrement, Rotation: $rotationForCurrentTime, $mRotationFinished, $diff")
+//		Log.d(TAG, "updateIncrement, Rotation: $rotationForCurrentTime, $mNumRotationFinished, $diff")
 	}
-	
-	private var cx = 0.0f
-	private var cy = 0.0f
-	private var xPos = 0.0f
-	private var yPos = 0.0f
-	private var xPosSecond = 0.0f
-	private var yPosSecond = 0.0f
-	private lateinit var mGradientShader: Shader
 	
 	private fun updateTextValues() {
 		mText = mTextCount.toString()
-		xPos = (width / 2.0f) - (mTextPaint.measureText(mText) / 2.0f)
-		yPos = (height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
+		mXPos = (width / 2.0f) - (mTextPaint.measureText(mText) / 2.0f)
+		mYPos = (height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
 		mTextSecond = (mTextCount + 1).toString()
-		xPosSecond = (width / 2.0f) - (mTextPaint.measureText(mTextSecond) / 2.0f)
-		yPosSecond = (height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
+		mXPosSecond = (width / 2.0f) - (mTextPaint.measureText(mTextSecond) / 2.0f)
+		mYPosSecond = (height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
 	}
 	
 	private fun initValues() {
-		cx = this.measuredWidth / 2.0f
-		cy = this.measuredHeight / 2.0f
+		mCx = this.measuredWidth / 2.0f
+		mCy = this.measuredHeight / 2.0f
 		mRect.set(mPadding, mPadding, width - mPadding, height - mPadding)
 		val w = width.toFloat()
 		val h = height.toFloat()
@@ -171,7 +183,7 @@ class FlipCardView : View {
 		}
 		updateIncrement()
 		mRotation = mRotation + mIncrement
-		mRotationFinished = mRotationFinished + mIncrement
+		mNumRotationFinished = mNumRotationFinished + mIncrement
 		if (mRotation >= 180.0f) {
 			mTextCount = (mTextCount + (mRotation / 180.0f).toInt())
 			updateTextValues()

@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 			override fun onTabSelected(tab: TabLayout.Tab?) {
 				tab?.let {
 					viewPager.currentItem = tab.position
+					adapter.resetItem(tab.position)
 				}
 			}
 			
@@ -78,10 +79,21 @@ class MainActivity : AppCompatActivity() {
 		
 		override fun getCount() = numOfItems
 		
+		private var noticePeriodFragment = NoticePeriodFragment()
+		private var workedForFragment = WorkedForFragment()
+		
+		fun resetItem(position: Int) {
+//			TODO: Is Active Logic.
+			when (position) {
+				0 -> noticePeriodFragment.reset()
+				1 -> workedForFragment.reset()
+			}
+		}
+		
 		override fun getItem(position: Int): Fragment? {
 			return when (position) {
-				0 -> NoticePeriodFragment()
-				1 -> WorkedForFragment()
+				0 -> noticePeriodFragment
+				1 -> workedForFragment
 				else -> {
 					Log.w(TAG, "Bad fragment")
 					null

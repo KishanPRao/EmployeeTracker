@@ -30,6 +30,17 @@ class NoticePeriodFragment : Fragment() {
 		return inflater.inflate(R.layout.fragment_notice_period, container, false)
 	}
 	
+	fun reset() {
+		first_text.reset()
+		second_text.reset()
+		third_text.reset()
+	}
+	
+	override fun onResume() {
+		super.onResume()
+//		reset()
+	}
+	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		val lastDate = startDate.plusDays(noticePeriodDays)
 		val period = Period(now, lastDate, PeriodType.yearMonthDay())
