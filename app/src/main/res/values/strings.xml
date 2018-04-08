@@ -1,0 +1,8 @@
+<resources>
+	<string name="app_name">Employee Tracker</string>
+	
+	<array name="tabs_array">
+		<item>Time Left</item>
+		<item>Worked For</item>
+	</array>
+</resources>

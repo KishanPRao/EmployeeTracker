@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="com.kishan.employeetracker.ui.MainActivity">
+	
+	<android.support.v4.view.ViewPager
+		android:id="@+id/viewPager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="50dp"
+		android:background="@color/colorPrimary"
+		/>
+	
+	<android.support.design.widget.TabLayout
+		android:id="@+id/tabLayout"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:background="@color/colorPrimaryDark"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/viewPager"
+		/>
+	<!--app:tabMode="scrollable"-->
+	<!--app:tabGravity="center"-->
+	<!--Else, PagerSlidingTabStrip-->
+	
+	
+	<ImageButton
+		android:id="@+id/btnSettings"
+		android:layout_width="@dimen/settings_size"
+		android:layout_height="@dimen/settings_size"
+		android:layout_marginEnd="8dp"
+		android:layout_marginRight="8dp"
+		android:layout_marginTop="8dp"
+		android:src="@mipmap/ic_settings"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:contentDescription="Settings"
+		android:foreground="?attr/selectableItemBackgroundBorderless"
+		/>
+	
+</android.support.constraint.ConstraintLayout>
