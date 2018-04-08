@@ -38,8 +38,8 @@ class WorkedForFragment : Fragment() {
 		val months = period.months
 		val days = period.days
 		Log.d(TAG, "onViewCreated, diff = { $years : $months : $days }")
-		first_text.text = years
-		second_text.text = months
-		third_text.text = days
+		first_text.number = years
+		second_text.number = months
+		third_text.number = days
 	}
 }

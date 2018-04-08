@@ -2,20 +2,18 @@ package com.kishan.employeetracker.ui
 
 import android.content.Context
 import android.graphics.*
-import android.os.Build
-import android.support.annotation.RequiresApi
+import android.support.v4.view.animation.PathInterpolatorCompat
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import android.view.animation.PathInterpolator
+import android.view.animation.Interpolator
 import com.kishan.employeetracker.R
 
 
 /**
  * Created by Kishan P Rao on 06/04/18.
  */
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class FlipCardView : View {
 	companion object {
 		private val TAG = FlipCardView::class.java.simpleName
@@ -23,15 +21,14 @@ class FlipCardView : View {
 		private const val TEXT_COLOR = Color.WHITE
 		private const val CARD_COLOR = Color.DKGRAY
 		private const val BG_COLOR = Color.TRANSPARENT
-//		private const val BG_COLOR = Color.BLUE
 		
 		private const val SHADOW_COLOR = Color.BLACK
-		//		private const val SHADOW_COLOR = Color.YELLOW
 		private const val SHADOW_RADIUS = 5.0f
 		private const val SHADOW_X_OFFSET = 2.0f
 		private const val SHADOW_Y_OFFSET = 2.0f
 		
 		private const val MAX_TIME_MS = 2 * 1000
+		//		private const val MAX_TIME_MS = 10 * 1000
 		private const val SINGLE_CARD_AMOUNT = 180.0f
 	}
 	
@@ -43,25 +40,31 @@ class FlipCardView : View {
 	private val mMatrix = Matrix()
 	private val mCamera = Camera()
 	
-	private var mText = "0"
-	private var mTextSecond = "0"
-	private var mTextCount = -1
-	var text = 30
+	private var mText = "DUMMY"
+	private var mTextSecond = "DUMMY"
+	private var mTextCount = 0
+	var number = 1
 	
-	//	private val SINGLE_CARD_AMOUNT = 90.0f
 	private var mRotation = -1.0f
 	private var mRotationFinished = -1.0f
-	private var MAX_LIMIT = 80.0f
+//	private var MAX_LIMIT = 80.0f   //Per onDraw increment. Beyond this animations looks horrible.
 	
 	private var mIncrement = 1.0f
-	//	private val MAX_TIME_MS = 4 * 1000
 	private var mStartTime = -1
 	
-	//	private val mInterpolator = PathInterpolator(0.2f, 0.0f, 0.2f, 1.0f)
-//	private val mInterpolator = PathInterpolator(0.2f, 0.2f, 0.9f, 1.0f)
-	private val mInterpolator = PathInterpolator(0.2f, 0.0f, 0.0f, 1.0f)
+	//	private val mInterpolator = createPathInterpolator(0.2f, 0.0f, 0.2f, 1.0f)
+//	private val mInterpolator = createPathInterpolator(0.2f, 0.2f, 0.9f, 1.0f)
+//	private val mInterpolator = createPathInterpolator(0.2f, 0.0f, 0.0f, 1.0f)
+	private val mInterpolator = createPathInterpolator(0.2f, 0.0f, 0.0f, 1.0f)
 	
 	private var mInitialized = false
+	
+	private fun createPathInterpolator(controlX1: Float,
+	                                   controlY1: Float,
+	                                   controlX2: Float,
+	                                   controlY2: Float): Interpolator {
+		return PathInterpolatorCompat.create(controlX1, controlY1, controlX2, controlY2)
+	}
 	
 	constructor(context: Context) : this(context, null)
 	
@@ -92,7 +95,6 @@ class FlipCardView : View {
 		
 		mTextPaint.shader = oldShader
 		mTextPaint.color = TEXT_COLOR
-//		mTextPaint.setShadowLayer(0.0f, 0.0f, 0.0f, SHADOW_COLOR)
 		canvas.drawText(text, xPos, yPos, mTextPaint)
 		
 		canvas.restore()
@@ -119,7 +121,7 @@ class FlipCardView : View {
 		val amountModified = mInterpolator.getInterpolation(amount)
 //		Log.d(TAG, "updateIncrement, $amount -> $amountModified")
 		amount = amountModified
-		val totalRotation = SINGLE_CARD_AMOUNT * (text + 1)    //Starts from -1
+		val totalRotation = SINGLE_CARD_AMOUNT * number
 		val rotationForCurrentTime = amount * totalRotation
 		val diff = rotationForCurrentTime - mRotationFinished
 		mIncrement = diff
@@ -135,6 +137,15 @@ class FlipCardView : View {
 	private var yPosSecond = 0.0f
 	private lateinit var mGradientShader: Shader
 	
+	private fun updateTextValues() {
+		mText = mTextCount.toString()
+		xPos = (width / 2.0f) - (mTextPaint.measureText(mText) / 2.0f)
+		yPos = (height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
+		mTextSecond = (mTextCount + 1).toString()
+		xPosSecond = (width / 2.0f) - (mTextPaint.measureText(mTextSecond) / 2.0f)
+		yPosSecond = (height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
+	}
+	
 	private fun initValues() {
 		cx = this.measuredWidth / 2.0f
 		cy = this.measuredHeight / 2.0f
@@ -146,6 +157,7 @@ class FlipCardView : View {
 		mGradientShader = LinearGradient(
 				w, 0.0f, w, h,
 				shaderColorStart, shaderColorEnd, Shader.TileMode.CLAMP)
+		updateTextValues()
 	}
 	
 	override fun onDraw(canvas: Canvas) {
@@ -162,12 +174,7 @@ class FlipCardView : View {
 		mRotationFinished = mRotationFinished + mIncrement
 		if (mRotation >= 180.0f) {
 			mTextCount = (mTextCount + (mRotation / 180.0f).toInt())
-			mText = mTextCount.toString()
-			xPos = (canvas.width / 2.0f) - (mTextPaint.measureText(mText) / 2.0f)
-			yPos = (canvas.height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
-			mTextSecond = (mTextCount + 1).toString()
-			xPosSecond = (canvas.width / 2.0f) - (mTextPaint.measureText(mTextSecond) / 2.0f)
-			yPosSecond = (canvas.height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
+			updateTextValues()
 		}
 		mRotation %= 180
 		
