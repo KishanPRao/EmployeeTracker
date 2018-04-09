@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.kishan.employeetracker.R
+import com.kishan.employeetracker.data.DateStorage
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -18,18 +19,28 @@ class MainActivity : AppCompatActivity() {
 	
 	companion object {
 		private val TAG = MainActivity::class.java.simpleName
+		
+		private const val WORKING_COUNT = 1
+		private const val RESIGN_COUNT = 2
 	}
 	
-	var openingSettings = false
+	private var openingSettings = false
 	
 	private fun initView() {
+		val resigned = DateStorage(applicationContext).hasResigned()
 		val tabLayout = tabLayout
-		for (tabName in resources.getStringArray(R.array.tabs_array)) {
+		val arrayId = if (resigned) R.array.tabs_resign_array else R.array.tabs_array
+		for (tabName in resources.getStringArray(arrayId)) {
 			val tab = tabLayout.newTab().setText(tabName)
 			tabLayout.addTab(tab)
 		}
 		val viewPager = viewPager
-		val adapter = EmployeeTrackerAdapter(supportFragmentManager, 2)
+		val count = if (resigned)
+			RESIGN_COUNT
+		else
+			WORKING_COUNT
+		Log.d(TAG, "initView, $count")
+		val adapter = EmployeeTrackerAdapter(supportFragmentManager, count)
 		viewPager.adapter = adapter
 		viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 		tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -79,21 +90,39 @@ class MainActivity : AppCompatActivity() {
 		
 		override fun getCount() = numOfItems
 		
-		private var noticePeriodFragment = NoticePeriodFragment()
 		private var workedForFragment = WorkedForFragment()
+		private val noticePeriodFragment: NoticePeriodFragment by lazy {
+			NoticePeriodFragment()
+		}
 		
 		fun resetItem(position: Int) {
 //			TODO: Is Active Logic.
 			when (position) {
-				0 -> noticePeriodFragment.reset()
-				1 -> workedForFragment.reset()
+				0 -> {
+					if (numOfItems == RESIGN_COUNT) {
+						noticePeriodFragment.reset()
+					} else {
+						workedForFragment.reset()
+					}
+				}
+				1 -> {
+					workedForFragment.reset()
+				}
 			}
 		}
 		
 		override fun getItem(position: Int): Fragment? {
 			return when (position) {
-				0 -> noticePeriodFragment
-				1 -> workedForFragment
+				0 -> {
+					if (numOfItems == RESIGN_COUNT) {
+						noticePeriodFragment
+					} else {
+						workedForFragment
+					}
+				}
+				1 -> {
+					workedForFragment
+				}
 				else -> {
 					Log.w(TAG, "Bad fragment")
 					null

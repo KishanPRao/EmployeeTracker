@@ -5,4 +5,8 @@
 	<dimen name="card_size">120dp</dimen>
 	<dimen name="card_padding">10dp</dimen>
 	<dimen name="font_size">40sp</dimen>
+	<!--<dimen name="date_picker_margin">50dp</dimen>-->
+	<dimen name="date_picker_margin">8dp</dimen>
+	<dimen name="date_picker_padding">20dp</dimen>
+	<!--<dimen name="date_picker_margin">8dp</dimen>-->
 </resources>

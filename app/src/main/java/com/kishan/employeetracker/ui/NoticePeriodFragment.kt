@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kishan.employeetracker.R
+import com.kishan.employeetracker.data.DateStorage
 import kotlinx.android.synthetic.main.fragment_notice_period.*
 import org.joda.time.LocalDate
 import org.joda.time.Period
@@ -22,8 +23,9 @@ class NoticePeriodFragment : Fragment() {
 		private val TAG = NoticePeriodFragment::class.java.simpleName
 	}
 	
-	private val startDate = LocalDate(2018, 2, 21)
-	private val noticePeriodDays = 90
+	//	private val startDate = LocalDate(2018, 2, 21)
+	private lateinit var startDate: LocalDate
+	private var noticePeriodDays = 0
 	private var now = LocalDate.now()
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,6 +44,10 @@ class NoticePeriodFragment : Fragment() {
 	}
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		val dateStorage = DateStorage(context)
+		startDate = dateStorage.getResignDate()
+		noticePeriodDays = dateStorage.getNoticePeriod()
+		
 		val lastDate = startDate.plusDays(noticePeriodDays)
 		val period = Period(now, lastDate, PeriodType.yearMonthDay())
 		val years = period.years

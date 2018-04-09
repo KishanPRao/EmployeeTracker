@@ -2,7 +2,14 @@
 	<string name="app_name">Employee Tracker</string>
 	
 	<array name="tabs_array">
+		<item>Worked For</item>
+	</array>
+	
+	<array name="tabs_resign_array">
 		<item>Time Left</item>
 		<item>Worked For</item>
 	</array>
+	
+	<string name="launch_worked_desc">Set Start Date</string>
+	<string name="launch_resign_desc">Set Resignation Date</string>
 </resources>

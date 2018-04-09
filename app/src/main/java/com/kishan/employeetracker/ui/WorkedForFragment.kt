@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kishan.employeetracker.R
+import com.kishan.employeetracker.data.DateStorage
 import kotlinx.android.synthetic.main.fragment_worked_for.*
 import org.joda.time.*
 
@@ -19,11 +20,11 @@ class WorkedForFragment : Fragment() {
 		private val TAG = WorkedForFragment::class.java.simpleName
 	}
 	
-	private val startDate = LocalDate(2016, 5, 16)
+	//	private val startDate = LocalDate(2016, 5, 16)
+	private lateinit var startDate: LocalDate
 	private var now = LocalDate.now()
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		Log.d(TAG, "onCreateView, $startDate, $now")
 		
 		/*val monthsBetween = Months.monthsBetween(startDate, now).months
 		val yearsBetween = Years.yearsBetween(startDate, now).years
@@ -44,6 +45,9 @@ class WorkedForFragment : Fragment() {
 	}
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		val dateStorage = DateStorage(context)
+		startDate = dateStorage.getStartDate()
+		Log.d(TAG, "onCreateView, $startDate, $now")
 		val period = Period(startDate, now, PeriodType.yearMonthDay())
 		val years = period.years
 		val months = period.months
