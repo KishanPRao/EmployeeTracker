@@ -34,9 +34,13 @@ class WorkedForFragment : Fragment() {
 	}
 	
 	fun reset() {
-		first_text.reset()
-		second_text.reset()
-		third_text.reset()
+		try {
+			first_text.reset()
+			second_text.reset()
+			third_text.reset()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
 	}
 	
 	override fun onResume() {
@@ -44,8 +48,8 @@ class WorkedForFragment : Fragment() {
 //		reset()
 	}
 	
-	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-		val dateStorage = DateStorage(context)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		val dateStorage = DateStorage(context!!)
 		startDate = dateStorage.getStartDate()
 		Log.d(TAG, "onCreateView, $startDate, $now")
 		val period = Period(startDate, now, PeriodType.yearMonthDay())

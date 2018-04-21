@@ -12,4 +12,12 @@
 	
 	<string name="launch_worked_desc">Set Start Date</string>
 	<string name="launch_resign_desc">Set Resignation Date</string>
+	
+	<string name="year">Year</string>
+	<string name="month">Month</string>
+	<string name="day">Day</string>
+	
+	<!--<string name="year"><u>Year</u></string>-->
+	<!--<string name="month"><u>Month</u></string>-->
+	<!--<string name="day"><u>Day</u></string>-->
 </resources>

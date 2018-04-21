@@ -34,14 +34,13 @@
 		android:id="@+id/btnSettings"
 		android:layout_width="@dimen/settings_size"
 		android:layout_height="@dimen/settings_size"
-		android:layout_marginEnd="8dp"
-		android:layout_marginRight="8dp"
-		android:layout_marginTop="8dp"
+		android:padding="@dimen/settings_padding"
 		android:src="@mipmap/ic_settings"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		android:contentDescription="Settings"
 		android:foreground="?attr/selectableItemBackgroundBorderless"
+		android:background="@android:color/transparent"
 		/>
 	
 </android.support.constraint.ConstraintLayout>

@@ -28,7 +28,7 @@ class FlipCardView : View {
 		private const val SHADOW_X_OFFSET = 2.0f
 		private const val SHADOW_Y_OFFSET = 2.0f
 		
-		private const val MAX_TIME_MS = 2 * 1000
+		private const val MAX_TIME_MS = AnimationUtils.ANIM_TIME
 		//		private const val MAX_TIME_MS = 10 * 1000
 		private const val SINGLE_CARD_AMOUNT = 180.0f
 	}
@@ -56,7 +56,7 @@ class FlipCardView : View {
 	//	private val mInterpolator = createPathInterpolator(0.2f, 0.0f, 0.2f, 1.0f)
 //	private val mInterpolator = createPathInterpolator(0.2f, 0.2f, 0.9f, 1.0f)
 //	private val mInterpolator = createPathInterpolator(0.2f, 0.0f, 0.0f, 1.0f)
-	private val mInterpolator = createPathInterpolator(0.2f, 0.0f, 0.0f, 1.0f)
+	private val mInterpolator = AnimationUtils.INTERPOLATOR
 	
 	private var mInitialized = false
 	
@@ -68,12 +68,12 @@ class FlipCardView : View {
 	private var mYPosSecond = 0.0f
 	private lateinit var mGradientShader: Shader
 	
-	private fun createPathInterpolator(controlX1: Float,
+	/*private fun createPathInterpolator(controlX1: Float,
 	                                   controlY1: Float,
 	                                   controlX2: Float,
 	                                   controlY2: Float): Interpolator {
 		return PathInterpolatorCompat.create(controlX1, controlY1, controlX2, controlY2)
-	}
+	}*/
 	
 	constructor(context: Context) : this(context, null)
 	

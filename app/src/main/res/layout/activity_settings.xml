@@ -5,10 +5,48 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="#424242"
 	tools:context="com.kishan.employeetracker.ui.SettingsActivity"
-	android:background="#0ff0ff"
 	>
 	
+	<Button
+		android:id="@+id/startDateSetting"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="8dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		android:text="Update Start Date"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		/>
 	
+	<Button
+		android:id="@+id/resignDateSetting"
+		android:layout_width="274dp"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		android:text="Update Resign Date"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/startDateSetting"
+		/>
 	
+	<Button
+		android:id="@+id/resignDateSettingReset"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="8dp"
+		android:layout_marginRight="8dp"
+		android:layout_marginTop="8dp"
+		android:text="Reset"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/startDateSetting"
+		/>
+
+
 </android.support.constraint.ConstraintLayout>

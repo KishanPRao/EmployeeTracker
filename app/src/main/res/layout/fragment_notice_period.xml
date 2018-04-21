@@ -7,99 +7,101 @@
 	android:background="@color/bg_color"
 	>
 	
-	<LinearLayout
+	<com.triggertrap.seekarc.SeekArc
+		android:id="@+id/progressArc"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="8dp"
-		android:gravity="center"
-		android:weightSum="3"
-		app:layout_constraintBottom_toTopOf="@+id/linearLayout2">
-		<TextView
-			android:id="@+id/first_label"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:text="Year"
-			/>
-		<TextView
-			android:id="@+id/second_label"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:text="Month"
-			/>
-		
-		<TextView
-			android:id="@+id/third_label"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:text="Day"
-			/>
-	</LinearLayout>
+		android:layout_height="match_parent"
+		android:padding="15dp"
+		app:enabled="false"
+		app:progress="0"
+		app:progressColor="@color/colorAccent"
+		app:progressWidth="5dp"
+		app:rotation="180"
+		app:startAngle="30"
+		app:sweepAngle="300"
+		/>
+		<!--app:arcColor="@color/colorPrimary"-->
 	
-	<LinearLayout
-		android:id="@+id/linearLayout2"
+	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="8dp"
-		android:layout_marginTop="8dp"
-		android:gravity="center"
-		android:weightSum="3"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		android:layout_height="match_parent"
+		android:layout_margin="40dp"
+		>
 		
-		<!--<TextView
-			android:id="@+id/first_text"
-			android:layout_width="0dp"
+		<LinearLayout
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			android:layout_marginBottom="8dp"
 			android:gravity="center"
-			/>
+			android:weightSum="3"
+			app:layout_constraintBottom_toTopOf="@+id/linearLayout2">
+			
+			<TextView
+				android:id="@+id/first_label"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center"
+				android:text="@string/year"
+				style="@style/CardTitleStyle"
+				/>
+			
+			<TextView
+				android:id="@+id/second_label"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center"
+				android:text="@string/month"
+				style="@style/CardTitleStyle"
+				/>
+			
+			<TextView
+				android:id="@+id/third_label"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="center"
+				android:text="@string/day"
+				style="@style/CardTitleStyle"
+				/>
+		</LinearLayout>
 		
-		<TextView
-			android:id="@+id/second_text"
-			android:layout_width="0dp"
+		<LinearLayout
+			android:id="@+id/linearLayout2"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			android:layout_marginBottom="8dp"
+			android:layout_marginTop="8dp"
 			android:gravity="center"
-			/>
-		
-		<TextView
-			android:id="@+id/third_text"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:gravity="center"
-			/>-->
-		
-		
-		<com.kishan.employeetracker.ui.FlipCardView
-			android:id="@+id/first_text"
-			android:layout_width="0dp"
-			android:layout_height="@dimen/card_size"
-			android:layout_weight="1"
-			android:layout_gravity="center"
-			/>
-		
-		<com.kishan.employeetracker.ui.FlipCardView
-			android:id="@+id/second_text"
-			android:layout_width="0dp"
-			android:layout_height="@dimen/card_size"
-			android:layout_weight="1"
-			android:layout_gravity="center"
-			/>
-		
-		<com.kishan.employeetracker.ui.FlipCardView
-			android:id="@+id/third_text"
-			android:layout_width="0dp"
-			android:layout_height="@dimen/card_size"
-			android:layout_weight="1"
-			android:layout_gravity="center"
-			/>
-	</LinearLayout>
+			android:weightSum="3"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
+			
+			<com.kishan.employeetracker.ui.FlipCardView
+				android:id="@+id/first_text"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/card_size"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				/>
+			
+			<com.kishan.employeetracker.ui.FlipCardView
+				android:id="@+id/second_text"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/card_size"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				/>
+			
+			<com.kishan.employeetracker.ui.FlipCardView
+				android:id="@+id/third_text"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/card_size"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				/>
+		</LinearLayout>
+	</android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

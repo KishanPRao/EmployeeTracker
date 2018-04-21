@@ -49,6 +49,8 @@ class LaunchActivity : AppCompatActivity() {
 			return
 		}
 		
+//		TODO: Until Skip, or last pager has been reached, not init!!
+		
 		val viewPager = viewPager
 		val adapter = LaunchAdapter(supportFragmentManager, SLIDE_COUNT, {
 			Log.d(TAG, "onCreate, date => $it")
@@ -116,7 +118,8 @@ class LaunchActivity : AppCompatActivity() {
 			return inflater.inflate(R.layout.fragment_notice_launch, null, false)
 		}
 		
-		override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//			TODO: Enter through keyboard, press back button!
 			numberPicker.minValue = 0
 			numberPicker.maxValue = 180
 			launch_notice_next.setOnClickListener {
@@ -126,7 +129,7 @@ class LaunchActivity : AppCompatActivity() {
 	}
 	
 	class StartDateLaunchFragment : BaseLaunchFragment() {
-		override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 			super.onViewCreated(view, savedInstanceState)
 //			datePicker.maxDate = System.currentTimeMillis()
 			launch_desc.text = resources.getString(R.string.launch_worked_desc)
@@ -135,7 +138,7 @@ class LaunchActivity : AppCompatActivity() {
 	}
 	
 	class ResignationLaunchFragment : BaseLaunchFragment() {
-		override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 			super.onViewCreated(view, savedInstanceState)
 //			datePicker.minDate = System.currentTimeMillis()
 			launch_desc.text = resources.getString(R.string.launch_resign_desc)
@@ -150,7 +153,7 @@ class LaunchActivity : AppCompatActivity() {
 			return inflater.inflate(R.layout.fragment_base_launch, null, false)
 		}
 		
-		override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 			launch_next.setOnClickListener {
 				val day = datePicker.dayOfMonth
 				val month = datePicker.month + 1

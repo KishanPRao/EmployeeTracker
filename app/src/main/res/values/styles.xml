@@ -11,5 +11,12 @@
 	<style name="LaunchTheme" parent="AppTheme">
 		<item name="android:windowFullscreen">true</item>
 	</style>
+	
+	<style name="CardTitleStyle" parent="@android:style/TextAppearance.Widget.TextView">
+		<item name="android:background">@android:color/transparent</item>
+		<item name="android:textColor">@color/card_title_color</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">@dimen/card_title_size</item>
+	</style>
 
 </resources>
