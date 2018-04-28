@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kishan.employeetracker.R
-import com.kishan.employeetracker.data.DateStorage
+import com.kishan.employeetracker.data.DataStorage
 import kotlinx.android.synthetic.main.activity_launch.*
 import kotlinx.android.synthetic.main.fragment_base_launch.*
 import kotlinx.android.synthetic.main.fragment_notice_launch.*
@@ -30,7 +30,7 @@ class LaunchActivity : AppCompatActivity() {
 		const val NOTICE_SLIDE = 2
 	}
 	
-	private lateinit var dateStorage: DateStorage
+	private lateinit var dataStorage: DataStorage
 	
 	private fun stop() {
 		finish()
@@ -42,9 +42,9 @@ class LaunchActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_launch)
 		
-		dateStorage = DateStorage(applicationContext)
+		dataStorage = DataStorage(applicationContext)
 		
-		if (dateStorage.isInitialized()) {
+		if (dataStorage.isInitialized()) {
 			stop()
 			return
 		}
@@ -60,15 +60,15 @@ class LaunchActivity : AppCompatActivity() {
 				stop()
 			} else {
 				if (viewPager.currentItem == START_SLIDE) {
-					dateStorage.putStartDate(it)
+					dataStorage.putStartDate(it)
 				} else {
-					dateStorage.putResignDate(it)
+					dataStorage.putResignDate(it)
 				}
 				viewPager.currentItem++
 			}
 		}, {
 			if (viewPager.currentItem == (SLIDE_COUNT - 1)) {
-				dateStorage.putNoticePeriod(it)
+				dataStorage.putNoticePeriod(it)
 				Log.d(TAG, "onCreate, done")
 				stop()
 			}
@@ -119,7 +119,7 @@ class LaunchActivity : AppCompatActivity() {
 		}
 		
 		override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//			TODO: Enter through keyboard, press back button!
+//			FIXME: Enter through keyboard, press back button!
 			numberPicker.minValue = 0
 			numberPicker.maxValue = 180
 			launch_notice_next.setOnClickListener {

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kishan.employeetracker.R
-import com.kishan.employeetracker.data.DateStorage
+import com.kishan.employeetracker.data.DataStorage
 import kotlinx.android.synthetic.main.fragment_worked_for.*
 import org.joda.time.*
 
@@ -49,7 +49,7 @@ class WorkedForFragment : Fragment() {
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val dateStorage = DateStorage(context!!)
+		val dateStorage = DataStorage(context!!)
 		startDate = dateStorage.getStartDate()
 		Log.d(TAG, "onCreateView, $startDate, $now")
 		val period = Period(startDate, now, PeriodType.yearMonthDay())

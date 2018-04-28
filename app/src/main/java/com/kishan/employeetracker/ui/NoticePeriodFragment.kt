@@ -2,12 +2,13 @@ package com.kishan.employeetracker.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kishan.employeetracker.R
-import com.kishan.employeetracker.data.DateStorage
+import com.kishan.employeetracker.data.DataStorage
 import com.triggertrap.seekarc.SeekArc
 import kotlinx.android.synthetic.main.fragment_notice_period.*
 import org.joda.time.Days
@@ -62,17 +63,27 @@ class NoticePeriodFragment : Fragment() {
 //		Log.d(TAG, "updateIncrement, Rotation: $rotationForCurrentTime, $mNumRotationFinished, $diff")
 	}
 	
+	private fun resignDone() {
+		val newContext = context
+		newContext?.apply {
+			progressArc.progressColor = ContextCompat.getColor(newContext, R.color.progressFull)
+			notice_finished_text.visibility = View.VISIBLE
+		}
+	}
+	
 	private fun tryAnimateArc() {
 		val progress = (daysCompleted * 100) / noticePeriodDays
 		val progressArc: SeekArc? = progressArc
-		progressArc?.let {
-//			updateIncrement()
+		progressArc?.apply {
+			//			updateIncrement()
 			if (progressArc.progress < progress) {
 				progressArc.progress++
 //				progressArc.progress += mIncrement
 				progressArc.postDelayed({
 					tryAnimateArc()
 				}, 16)
+			} else if (progressArc.progress == 100) {
+				resignDone()
 			}
 		}
 	}
@@ -104,9 +115,11 @@ class NoticePeriodFragment : Fragment() {
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		val dateStorage = DateStorage(context!!)
+		val dateStorage = DataStorage(context!!)
 		startDate = dateStorage.getResignDate()
 		noticePeriodDays = dateStorage.getNoticePeriod()
+		Log.v(TAG, "onViewCreated, notice: $noticePeriodDays")
+		Log.v(TAG, "onViewCreated, resign: $startDate")
 //		daysCompleted = Days.daysBetween(LocalDate.now(), startDate)
 		daysCompleted = Days.daysBetween(startDate, LocalDate.now()).days
 		
@@ -114,8 +127,7 @@ class NoticePeriodFragment : Fragment() {
 		val period = Period(now, lastDate, PeriodType.yearMonthDay())
 		val years = period.years
 		val months = period.months
-//		val days = period.days      //Includes end date TODO: Right?
-		val days = period.days - 1
+		val days = period.days
 		Log.d(TAG, "onViewCreated, diff = { $years : $months : $days }")
 		first_text.number = years
 		second_text.number = months

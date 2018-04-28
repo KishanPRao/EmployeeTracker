@@ -20,7 +20,7 @@
 		app:startAngle="30"
 		app:sweepAngle="300"
 		/>
-		<!--app:arcColor="@color/colorPrimary"-->
+	<!--app:arcColor="@color/colorPrimary"-->
 	
 	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"
@@ -38,32 +38,32 @@
 			
 			<TextView
 				android:id="@+id/first_label"
+				style="@style/CardTitleStyle"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:gravity="center"
 				android:text="@string/year"
-				style="@style/CardTitleStyle"
 				/>
 			
 			<TextView
 				android:id="@+id/second_label"
+				style="@style/CardTitleStyle"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:gravity="center"
 				android:text="@string/month"
-				style="@style/CardTitleStyle"
 				/>
 			
 			<TextView
 				android:id="@+id/third_label"
+				style="@style/CardTitleStyle"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:gravity="center"
 				android:text="@string/day"
-				style="@style/CardTitleStyle"
 				/>
 		</LinearLayout>
 		
@@ -100,6 +100,26 @@
 				android:layout_height="@dimen/card_size"
 				android:layout_gravity="center"
 				android:layout_weight="1"
+				/>
+		</LinearLayout>
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			android:gravity="center"
+			app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+			
+			<TextView
+				android:id="@+id/notice_finished_text"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:text="@string/resign_done"
+				android:textColor="@android:color/white"
+				android:textSize="17sp"
+				android:textStyle="bold"
+				android:visibility="gone"
 				/>
 		</LinearLayout>
 	</android.support.constraint.ConstraintLayout>

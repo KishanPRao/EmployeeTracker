@@ -41,6 +41,7 @@
 		android:contentDescription="Settings"
 		android:foreground="?attr/selectableItemBackgroundBorderless"
 		android:background="@android:color/transparent"
+		android:visibility="gone"
 		/>
 	
 </android.support.constraint.ConstraintLayout>

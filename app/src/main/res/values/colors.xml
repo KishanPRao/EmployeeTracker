@@ -3,6 +3,7 @@
 	<color name="colorPrimary">#01579b</color>
 	<color name="colorPrimaryDark">#000000</color>
 	<color name="colorAccent">#0091ea</color>
+	<color name="progressFull">#e60000</color>
 	<!--<color name="colorAccent">#ffea00</color>-->
 	<color name="bg_color">#212121</color>
 	

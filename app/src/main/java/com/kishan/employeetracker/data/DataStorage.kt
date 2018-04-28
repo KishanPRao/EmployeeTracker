@@ -7,7 +7,7 @@ import org.joda.time.LocalDate
 /**
  * Created by Kishan P Rao on 09/04/18.
  */
-class DateStorage(context: Context) {
+class DataStorage(context: Context) {
 	companion object {
 		const val SHARED_PREFS_NAME = "EmployeeInfo"
 		const val NOTICE = "NOTICE"
@@ -21,6 +21,7 @@ class DateStorage(context: Context) {
 		
 		const val HAS_RESIGNED = "HAS_RESIGNED"
 		const val INITIALIZED = "INITIALIZED"
+		const val ICON_INITIALIZED = "ICON_INITIALIZED"
 	}
 	
 	private val sharedPreferences: SharedPreferences
@@ -66,4 +67,8 @@ class DateStorage(context: Context) {
 		val d = sharedPreferences.getInt(RESIGN_D, 0)
 		return LocalDate(y, m, d)
 	}
+	
+	fun isIconInitialized() = sharedPreferences.getBoolean(ICON_INITIALIZED, false)
+	
+	fun updateIconInitialization() = sharedPreferences.edit().putBoolean(ICON_INITIALIZED, true).apply()
 }

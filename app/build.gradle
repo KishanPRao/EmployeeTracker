@@ -25,15 +25,33 @@ android {
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-	implementation 'com.android.support:appcompat-v7:27.1.0'
-	implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-	testImplementation 'junit:junit:4.12'
-	androidTestImplementation 'com.android.support.test:runner:1.0.1'
-	androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+	implementation 'com.android.support:appcompat-v7:27.1.1'
+	implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 	
-	implementation 'com.android.support:design:27.1.0'
+	implementation 'com.android.support:design:27.1.1'
 	implementation 'net.danlew:android.joda:2.9.9.3'
 	implementation 'com.github.Triggertrap:SeekArc:v1.1'
 	implementation 'com.alex-zaitsev:meternumberpicker:1.0.2'
 	
+	testImplementation 'junit:junit:4.12'
+	// AndroidJUnitRunner and JUnit Rules
+	androidTestImplementation 'com.android.support.test:runner:1.0.2'
+	androidTestImplementation 'com.android.support.test:rules:1.0.2'
+	
+	// Espresso dependencies
+	androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-accessibility:3.0.2'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-web:3.0.2'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-remote:3.0.2'
+	androidTestImplementation 'com.android.support.test.espresso.idling:idling-concurrent:3.0.2'
+	
+	// The following Espresso dependency can be either "compile"
+	// or "androidTestImplementation", depending on your app's implementation
+	androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
+	
+	// Needed only if you're performing instrumentation and monitoring without
+	// using AndroidJUnitRunner or JUnit 4.
+	androidTestImplementation 'com.android.support.test:monitor:1.0.2'
 }

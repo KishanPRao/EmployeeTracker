@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.kishan.employeetracker.R
-import com.kishan.employeetracker.data.DateStorage
+import com.kishan.employeetracker.data.DataStorage
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 	private var openingSettings = false
 	
 	private fun initView() {
-		val resigned = DateStorage(applicationContext).hasResigned()
+		val resigned = DataStorage(applicationContext).hasResigned()
 		val tabLayout = tabLayout
 		val arrayId = if (resigned) R.array.tabs_resign_array else R.array.tabs_array
 		for (tabName in resources.getStringArray(arrayId)) {
@@ -74,12 +74,39 @@ class MainActivity : AppCompatActivity() {
 		super.onPause()
 	}
 	
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
+	private fun init() {
+		val dataStorage = DataStorage(applicationContext)
+		if (!AppLauncherManager.DISABLE && !dataStorage.isIconInitialized()) {
+			val resigned = dataStorage.hasResigned()
+			if (resigned) {
+				AppLauncherManager.disable(this, ".MainActivityJoin")
+				AppLauncherManager.enable(this, ".MainActivityResign")
+			} else {
+				AppLauncherManager.disable(this, ".MainActivityResign")
+				AppLauncherManager.enable(this, ".MainActivityJoin")
+			}
+			AppLauncherManager.disable(this, ".ui.LaunchActivity")
+			dataStorage.updateIconInitialization()
+		}
 		initView()
 		btnSettings.setOnClickListener {
 			openSettings()
+		}
+	}
+	
+	override fun onCreate(savedInstanceState: Bundle?) {
+		val isInitialized = DataStorage(applicationContext).isInitialized()
+		Log.d(TAG, "onCreate, $isInitialized")
+		super.onCreate(savedInstanceState)
+		if (isInitialized) {
+			setContentView(R.layout.activity_main)
+			init()
+		} else {
+			AppLauncherManager.disable(this, ".MainActivityResign")
+			AppLauncherManager.disable(this, ".MainActivityJoin")
+			AppLauncherManager.enable(this, ".ui.LaunchActivity")
+			startActivity(Intent(this, LaunchActivity::class.java))
+			finish()
 		}
 	}
 	
