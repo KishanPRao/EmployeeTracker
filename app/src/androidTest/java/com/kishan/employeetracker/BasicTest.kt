@@ -96,7 +96,7 @@ class BasicTest : ActivityTestRule<LaunchActivity>(LaunchActivity::class.java) {
 	)
 	
 	private fun testWait() {
-		Thread.sleep(0 * 1000)
+		Thread.sleep(2 * 1000)
 	}
 	
 	private fun completeWithoutNext() {
@@ -107,7 +107,7 @@ class BasicTest : ActivityTestRule<LaunchActivity>(LaunchActivity::class.java) {
 		var datePicker = withIndex(withId(R.id.datePicker), 0)
 		onView(datePicker).perform(PickerActions.setDate(year, month, day))
 		onView(withIndex(withId(R.id.launch_next), 0)).perform(click())
-		testWait()
+//		testWait()
 		
 		year = samplesResign[index].year
 		month = samplesResign[index].monthOfYear
@@ -115,7 +115,7 @@ class BasicTest : ActivityTestRule<LaunchActivity>(LaunchActivity::class.java) {
 		datePicker = withIndex(withId(R.id.datePicker), 1)
 		onView(datePicker).perform(PickerActions.setDate(year, month, day))
 		onView(withIndex(withId(R.id.launch_next), 1)).perform(click())
-		testWait()
+//		testWait()
 		
 		val notice = samplesNotice[index]
 		onView(withId(R.id.numberPicker)).perform(setNumber(notice))
