@@ -9,23 +9,26 @@ import org.joda.time.LocalDateTime
 class TimeUtils {
 	
 	companion object {
+		private const val Mock = false
 		private const val y = 2018
 		private const val m = 5
-		private const val d = 22
+		private const val d = 21
 		private const val hour = 0
-		private const val min = 0
+		private const val min = 20
+		private const val second = 30
 		
 		fun getCurrentTime(): LocalDateTime {
 			val dateTime = LocalDateTime.now()
-//			return dateTime
-			return LocalDateTime(y, m, d, hour, min)
+			if (Mock)
+				return LocalDateTime(y, m, d, hour, min, second)
+			return dateTime
 		}
 		
 		fun getCurrentDate(): LocalDate {
 			val dateTime = LocalDate.now()
-//			return dateTime
-			return LocalDate(y, m, d)
-//			return dateTime
+			if (Mock)
+				return LocalDate(y, m, d)
+			return dateTime
 		}
 		
 		fun getLocalTime(y: Int, m: Int, d: Int): LocalDateTime {

@@ -17,7 +17,11 @@
 	<string name="month">Month</string>
 	<string name="day">Day</string>
 	
-	<string name="resign_done">You\'re done with your notice period!\n Enjoy YOUR LIFE!</string>
+	<string name="hour">Hour</string>
+	<string name="minute">Minute</string>
+	<string name="second">Second</string>
+	
+	<string name="resign_done">You\'re done with your notice period!\nEnjoy YOUR LIFE!</string>
 	<!--<string name="year"><u>Year</u></string>-->
 	<!--<string name="month"><u>Month</u></string>-->
 	<!--<string name="day"><u>Day</u></string>-->

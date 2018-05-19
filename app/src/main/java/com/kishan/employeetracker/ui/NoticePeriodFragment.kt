@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.kishan.employeetracker.R
 import com.kishan.employeetracker.data.DataStorage
 import com.kishan.employeetracker.data.TimeMode
@@ -34,7 +35,6 @@ class NoticePeriodFragment : Fragment() {
 	private lateinit var startDate: LocalDateTime
 	private var noticePeriodDays = 0
 	private var daysCompleted = 0
-	private var now = TimeUtils.getCurrentTime()
 	
 	private val mInterpolator = AnimationUtils.INTERPOLATOR
 	private var mStartTime = -1
@@ -128,14 +128,53 @@ class NoticePeriodFragment : Fragment() {
 		updateMode()
 	}
 	
+	private fun changeText(textView: TextView, text: String, delay: Long) {
+		val totalDuration = 500L
+		val duration = totalDuration / 2
+		textView.animate().alpha(0f).setDuration(duration).withEndAction({
+			textView.text = text
+//			textView.animate().setDuration(duration).setStartDelay(delay).alpha(1f).start()
+			textView.animate().setDuration(duration).alpha(1f).start()
+		}).start()
+	}
+	
+	var track = false
+	
+	private fun trackIfNeeded() {
+		if (track) {
+			val delayInMs = 1000L
+			val third_text: FlipCardView? = third_text
+			third_text?.apply {
+//				Assuming HMS mode
+				val now = TimeUtils.getCurrentTime()
+				val lastDate = startDate.plusDays(noticePeriodDays)
+				val period = Period(now, lastDate, PeriodType.time())
+				first_text.number = period.hours.clampNegative
+				second_text.number = period.minutes.clampNegative
+				third_text.number = period.seconds.clampNegative
+				
+				third_text.postDelayed({
+					trackIfNeeded()
+				}, delayInMs)
+			}
+		}
+	}
+	
+	private fun stopTracking() {
+		track = false
+	}
+	
 	private fun updateMode() {
-		now = TimeUtils.getCurrentTime()
+		stopTracking()
 		val dateStorage = DataStorage(context!!)
 		startDate = dateStorage.getResignDateTime()
 		var firstData = 0
 		var secondData = 0
 		var thirdData = 0
 //		mode = TimeMode.HMS
+		var firstLabel = ""
+		var secondLabel = ""
+		var thirdLabel = ""
 		when (mode) {
 			TimeMode.YMD -> {
 				val lastDate = dateStorage.getResignDate().plusDays(noticePeriodDays)
@@ -147,9 +186,13 @@ class NoticePeriodFragment : Fragment() {
 				firstData = years
 				secondData = months
 				thirdData = days
+				firstLabel = getString(R.string.year)
+				secondLabel = getString(R.string.month)
+				thirdLabel = getString(R.string.day)
 				Log.d(TAG, "updateMode, ymd: $firstData, $secondData, $thirdData")
 			}
 			TimeMode.HMS -> {
+				val now = TimeUtils.getCurrentTime()
 				val lastDate = startDate.plusDays(noticePeriodDays)
 //				val period = Period(now, lastDate, PeriodType.time()).normalizedStandard()
 //				val period = Period(now, lastDate, PeriodType.dayTime(), ISOChronology.getInstanceUTC())
@@ -160,10 +203,21 @@ class NoticePeriodFragment : Fragment() {
 				firstData = period.hours
 				secondData = period.minutes
 				thirdData = period.seconds
+				firstLabel = getString(R.string.hour)
+				secondLabel = getString(R.string.minute)
+				thirdLabel = getString(R.string.second)
 				Log.d(TAG, "updateMode, hms: $firstData, $secondData, $thirdData")
+				track = true
 			}
 		}
 		
+		changeText(first_label, firstLabel, 0)
+		changeText(second_label, secondLabel, 0)
+		changeText(third_label, thirdLabel, 0)
+		
+		first_text.prepare()
+		second_text.prepare()
+		third_text.prepare()
 		first_text.number = firstData.clampNegative
 		second_text.number = secondData.clampNegative
 		third_text.number = thirdData.clampNegative
@@ -177,6 +231,8 @@ class NoticePeriodFragment : Fragment() {
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}
+		
+		trackIfNeeded()
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

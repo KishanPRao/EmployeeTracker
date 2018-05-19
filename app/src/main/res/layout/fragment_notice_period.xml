@@ -44,7 +44,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:gravity="center"
-				android:text="@string/year"
+				android:text=""
 				/>
 			
 			<TextView
@@ -54,7 +54,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:gravity="center"
-				android:text="@string/month"
+				android:text=""
 				/>
 			
 			<TextView
@@ -64,7 +64,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:gravity="center"
-				android:text="@string/day"
+				android:text=""
 				/>
 		</LinearLayout>
 		
@@ -124,20 +124,20 @@
 				/>
 		</LinearLayout>
 		
-		<Button
-			android:id="@+id/toggleMode"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="100dp"
-			android:layout_marginEnd="8dp"
-			android:layout_marginLeft="8dp"
-			android:layout_marginRight="8dp"
-			android:layout_marginStart="8dp"
-			android:text="Change Mode"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"/>
-		
 	</android.support.constraint.ConstraintLayout>
+	
+	<Button
+		android:id="@+id/toggleMode"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="60dp"
+		android:layout_marginEnd="8dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="8dp"
+		android:layout_marginStart="8dp"
+		android:text="Change Mode"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

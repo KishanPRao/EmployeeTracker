@@ -45,6 +45,15 @@ class FlipCardView : View {
 	private var mTextSecond = "DUMMY"
 	private var mTextCount = 0
 	var number = 1
+		set(value) {
+			if (!mInAnimation) {
+				if (field != value) {
+					updateTextValues(value)
+					invalidate()
+				}
+			}
+			field = value
+		}
 	
 	private var mRotation = -1.0f
 	private var mNumRotationFinished = -1.0f
@@ -59,6 +68,7 @@ class FlipCardView : View {
 	private val mInterpolator = AnimationUtils.INTERPOLATOR
 	
 	private var mInitialized = false
+	private var mInAnimation = true
 	
 	private var mCx = 0.0f
 	private var mCy = 0.0f
@@ -77,6 +87,10 @@ class FlipCardView : View {
 	
 	constructor(context: Context) : this(context, null)
 	
+	fun prepare() {
+		mInAnimation = true
+	}
+	
 	fun reset() {
 		mStartTime = -1
 		mIncrement = 1.0f
@@ -84,6 +98,7 @@ class FlipCardView : View {
 		mRotation = -1.0f
 		mTextCount = 0
 		mInitialized = false
+		prepare()
 		
 		invalidate()
 	}
@@ -149,8 +164,8 @@ class FlipCardView : View {
 //		Log.d(TAG, "updateIncrement, Rotation: $rotationForCurrentTime, $mNumRotationFinished, $diff")
 	}
 	
-	private fun updateTextValues() {
-		mText = mTextCount.toString()
+	private fun updateTextValues(value: Int) {
+		mText = value.toString()
 		mXPos = (width / 2.0f) - (mTextPaint.measureText(mText) / 2.0f)
 		mYPos = (height / 2.0f - (mTextPaint.descent() + mTextPaint.ascent()) / 2.0f)
 		mTextSecond = (mTextCount + 1).toString()
@@ -169,36 +184,43 @@ class FlipCardView : View {
 		mGradientShader = LinearGradient(
 				w, 0.0f, w, h,
 				shaderColorStart, shaderColorEnd, Shader.TileMode.CLAMP)
-		updateTextValues()
+		updateTextValues(mTextCount)
 	}
 	
 	override fun onDraw(canvas: Canvas) {
-		if (!mInitialized) {
-			if (this.width <= 0 || this.measuredWidth <= 0) {
-				Log.w(TAG, "onDraw, bad width")
-				return
+		if (mInAnimation) {
+			if (!mInitialized) {
+				if (this.width <= 0 || this.measuredWidth <= 0) {
+					Log.w(TAG, "onDraw, bad width")
+					return
+				}
+				initValues()
+				mInitialized = true
 			}
-			initValues()
-			mInitialized = true
-		}
-		updateIncrement()
-		mRotation = mRotation + mIncrement
-		mNumRotationFinished = mNumRotationFinished + mIncrement
-		if (mRotation >= 180.0f) {
-			mTextCount = (mTextCount + (mRotation / 180.0f).toInt())
-			updateTextValues()
-		}
-		mRotation %= 180
-		
-		canvas.drawColor(BG_COLOR)
-		
-		if (mRotation < 90) {
-			drawFirstCard(canvas)
+			updateIncrement()
+			mRotation = mRotation + mIncrement
+			mNumRotationFinished = mNumRotationFinished + mIncrement
+			if (mRotation >= 180.0f) {
+				mTextCount = (mTextCount + (mRotation / 180.0f).toInt())
+				updateTextValues(mTextCount)
+			}
+			mRotation %= 180
+			
+			canvas.drawColor(BG_COLOR)
+			
+			if (mRotation < 90) {
+				drawFirstCard(canvas)
+			} else {
+				drawSecondCard(canvas)
+			}
+			if (mIncrement != 0.0f) {
+				mInAnimation = true
+				invalidate()
+			} else {
+				mInAnimation = false
+			}
 		} else {
-			drawSecondCard(canvas)
-		}
-		if (mIncrement != 0.0f) {
-			invalidate()
+			drawCard(mText, mRotation, mXPos, mYPos, canvas)
 		}
 	}
 }
