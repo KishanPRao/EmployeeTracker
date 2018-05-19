@@ -34,6 +34,7 @@
 			android:enabled="true"
 			android:label="@string/app_name"
 			android:screenOrientation="user"
+			android:theme="@style/AppTheme"
 			android:windowSoftInputMode="adjustResize">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -47,7 +48,8 @@
 			android:icon="@mipmap/ic_launcher_resign"
 			android:label="@string/app_name"
 			android:roundIcon="@mipmap/ic_launcher_resign"
-			android:targetActivity="com.kishan.employeetracker.ui.MainActivity">
+			android:targetActivity="com.kishan.employeetracker.ui.MainActivity"
+			android:theme="@style/AppTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
@@ -59,7 +61,8 @@
 			android:icon="@mipmap/ic_launcher"
 			android:label="@string/app_name"
 			android:roundIcon="@mipmap/ic_launcher"
-			android:targetActivity="com.kishan.employeetracker.ui.MainActivity">
+			android:targetActivity="com.kishan.employeetracker.ui.MainActivity"
+			android:theme="@style/AppTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>

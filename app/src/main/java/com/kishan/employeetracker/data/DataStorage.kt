@@ -2,7 +2,9 @@ package com.kishan.employeetracker.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.kishan.employeetracker.utils.TimeUtils
 import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
 
 /**
  * Created by Kishan P Rao on 09/04/18.
@@ -61,10 +63,23 @@ class DataStorage(context: Context) {
 		return LocalDate(y, m, d)
 	}
 	
+	fun getResignDateTime(): LocalDateTime {
+		val y = sharedPreferences.getInt(RESIGN_Y, 0)
+		val m = sharedPreferences.getInt(RESIGN_M, 0)
+		val d = sharedPreferences.getInt(RESIGN_D, 0)
+//		return LocalDateTime(y, m, d, 0, 0)
+//		val dateTime = LocalDateTime.now()
+//		return LocalDateTime(y, m, d, dateTime.hourOfDay, dateTime.minuteOfHour)
+		return TimeUtils.getLocalTime(y, m, d)
+	}
+	
 	fun getResignDate(): LocalDate {
 		val y = sharedPreferences.getInt(RESIGN_Y, 0)
 		val m = sharedPreferences.getInt(RESIGN_M, 0)
 		val d = sharedPreferences.getInt(RESIGN_D, 0)
+//		return LocalDateTime(y, m, d, 0, 0)
+//		val dateTime = LocalDateTime.now()
+//		return LocalDateTime(y, m, d, dateTime.hourOfDay, dateTime.minuteOfHour)
 		return LocalDate(y, m, d)
 	}
 	

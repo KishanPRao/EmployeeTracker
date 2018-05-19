@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	private fun init() {
+//		rootLayout.alpha = 0.0f
 		val dataStorage = DataStorage(applicationContext)
 		if (!AppLauncherManager.DISABLE && !dataStorage.isIconInitialized()) {
 			val resigned = dataStorage.hasResigned()
@@ -92,6 +93,10 @@ class MainActivity : AppCompatActivity() {
 		btnSettings.setOnClickListener {
 			openSettings()
 		}
+//		rootLayout.animate().alpha(1.0f).setStartDelay(500).setDuration(1000).start()
+		/*rootLayout.scaleX = 0.0f
+		rootLayout.scaleY = 0.0f
+		rootLayout.animate().scaleX(1.0f).scaleY(1.0f).setStartDelay(500).setDuration(1000).start()*/
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +105,7 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		if (isInitialized) {
 			setContentView(R.layout.activity_main)
+//			overridePendingTransition(R.anim.activity_open, R.anim.activity_close)
 			init()
 		} else {
 			AppLauncherManager.disable(this, ".MainActivityResign")

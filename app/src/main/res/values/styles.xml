@@ -1,11 +1,22 @@
 <resources>
 	
+	<style name="Animation"/>
+	
+	<style name="Animation.LaunchAnimation">
+		<item name="android:activityOpenEnterAnimation">@anim/activity_open</item>
+		<item name="android:activityOpenExitAnimation">@anim/activity_hold_exit</item>
+		<item name="android:activityCloseEnterAnimation">@anim/activity_hold</item>
+		<item name="android:activityCloseExitAnimation">@anim/activity_open</item>
+	</style>
+	
 	<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
 		<item name="android:windowActionBar">false</item>
 		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowAnimationStyle">@style/Animation.LaunchAnimation</item>
+		<item name="android:windowBackground">@color/bg_color</item>
 	</style>
 	
 	<style name="LaunchTheme" parent="AppTheme">

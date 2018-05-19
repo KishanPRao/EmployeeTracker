@@ -9,12 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.kishan.employeetracker.R
 import com.kishan.employeetracker.data.DataStorage
+import com.kishan.employeetracker.data.TimeMode
+import com.kishan.employeetracker.utils.TimeUtils
 import com.triggertrap.seekarc.SeekArc
 import kotlinx.android.synthetic.main.fragment_notice_period.*
-import org.joda.time.Days
-import org.joda.time.LocalDate
-import org.joda.time.Period
-import org.joda.time.PeriodType
+import net.danlew.android.joda.JodaTimeAndroid
+import org.joda.time.*
+import java.util.*
 
 /**
  * Created by Kishan P Rao on 03/04/18.
@@ -25,19 +26,25 @@ class NoticePeriodFragment : Fragment() {
 	companion object {
 		private val TAG = NoticePeriodFragment::class.java.simpleName
 		private const val MAX_TIME_MS = AnimationUtils.ANIM_TIME
+		val Int.clampNegative: Int get() = if (this < 0) 0 else this
 	}
 	
 	//	private val startDate = LocalDate(2018, 2, 21)
-	private lateinit var startDate: LocalDate
+//	private lateinit var startDate: LocalDate
+	private lateinit var startDate: LocalDateTime
 	private var noticePeriodDays = 0
 	private var daysCompleted = 0
-	private var now = LocalDate.now()
+	private var now = TimeUtils.getCurrentTime()
 	
 	private val mInterpolator = AnimationUtils.INTERPOLATOR
 	private var mStartTime = -1
 	private var mIncrement = 1
 	
+	private var mode = TimeMode.YMD
+	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		JodaTimeAndroid.init(this.context)
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()))
 		return inflater.inflate(R.layout.fragment_notice_period, container, false)
 	}
 	
@@ -72,7 +79,10 @@ class NoticePeriodFragment : Fragment() {
 	}
 	
 	private fun tryAnimateArc() {
-		val progress = (daysCompleted * 100) / noticePeriodDays
+		var progress = (daysCompleted * 100) / noticePeriodDays
+		if (progress > 100) {
+			progress = 100
+		}
 		val progressArc: SeekArc? = progressArc
 		progressArc?.apply {
 			//			updateIncrement()
@@ -109,21 +119,77 @@ class NoticePeriodFragment : Fragment() {
 		}
 	}
 	
-	override fun onResume() {
-		super.onResume()
-//		reset()
+	private fun toggleMode() {
+		if (mode == TimeMode.YMD) {
+			mode = TimeMode.HMS
+		} else {
+			mode = TimeMode.YMD
+		}
+		updateMode()
+	}
+	
+	private fun updateMode() {
+		now = TimeUtils.getCurrentTime()
+		val dateStorage = DataStorage(context!!)
+		startDate = dateStorage.getResignDateTime()
+		var firstData = 0
+		var secondData = 0
+		var thirdData = 0
+//		mode = TimeMode.HMS
+		when (mode) {
+			TimeMode.YMD -> {
+				val lastDate = dateStorage.getResignDate().plusDays(noticePeriodDays)
+				val period = Period(TimeUtils.getCurrentDate(), lastDate, PeriodType.yearMonthDay())
+				val years = period.years
+				val months = period.months
+				val days = period.days
+				Log.d(TAG, "onViewCreated, diff = { $years : $months : $days }")
+				firstData = years
+				secondData = months
+				thirdData = days
+				Log.d(TAG, "updateMode, ymd: $firstData, $secondData, $thirdData")
+			}
+			TimeMode.HMS -> {
+				val lastDate = startDate.plusDays(noticePeriodDays)
+//				val period = Period(now, lastDate, PeriodType.time()).normalizedStandard()
+//				val period = Period(now, lastDate, PeriodType.dayTime(), ISOChronology.getInstanceUTC())
+				val period = Period(now, lastDate, PeriodType.time())
+//				Log.d(TAG, "updateMode, ${now.toDate().time}, ${LocalTime.now(DateTimeZone.UTC)}")
+//				Log.d(TAG, "updateMode, ${now.toDate().time}, ${LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault()))}")
+//				Log.d(TAG, "updateMode, ${now.toDate().time}, ${LocalTime.now(DateTimeZone.forTimeZone(TimeZone.getDefault()))}")
+				firstData = period.hours
+				secondData = period.minutes
+				thirdData = period.seconds
+				Log.d(TAG, "updateMode, hms: $firstData, $secondData, $thirdData")
+			}
+		}
+		
+		first_text.number = firstData.clampNegative
+		second_text.number = secondData.clampNegative
+		third_text.number = thirdData.clampNegative
+//		mStartTime = -1
+//		mIncrement = 1
+		try {
+			first_text.reset()
+			second_text.reset()
+			third_text.reset()
+//			animateArc()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
 	}
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		val dateStorage = DataStorage(context!!)
-		startDate = dateStorage.getResignDate()
+		startDate = dateStorage.getResignDateTime()
 		noticePeriodDays = dateStorage.getNoticePeriod()
 		Log.v(TAG, "onViewCreated, notice: $noticePeriodDays")
 		Log.v(TAG, "onViewCreated, resign: $startDate")
 //		daysCompleted = Days.daysBetween(LocalDate.now(), startDate)
-		daysCompleted = Days.daysBetween(startDate, LocalDate.now()).days
+//		daysCompleted = Days.daysBetween(startDate, LocalDate.now()).days
+		daysCompleted = Days.daysBetween(startDate, TimeUtils.getCurrentTime()).days
 		
-		val lastDate = startDate.plusDays(noticePeriodDays)
+		/*val lastDate = startDate.plusDays(noticePeriodDays)
 		val period = Period(now, lastDate, PeriodType.yearMonthDay())
 		val years = period.years
 		val months = period.months
@@ -131,11 +197,16 @@ class NoticePeriodFragment : Fragment() {
 		Log.d(TAG, "onViewCreated, diff = { $years : $months : $days }")
 		first_text.number = years
 		second_text.number = months
-		third_text.number = days
+		third_text.number = days*/
+		updateMode()
 		try {
 			animateArc()
 		} catch (e: Exception) {
 			e.printStackTrace()
+		}
+		
+		toggleMode.setOnClickListener {
+			toggleMode()
 		}
 	}
 }
