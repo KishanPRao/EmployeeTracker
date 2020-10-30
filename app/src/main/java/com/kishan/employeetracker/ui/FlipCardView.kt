@@ -18,7 +18,7 @@ class FlipCardView : View {
 	companion object {
 		private val TAG = FlipCardView::class.java.simpleName
 		
-		private const val TEXT_COLOR = Color.BLACK
+		private const val TEXT_COLOR = Color.GRAY
 		private const val CARD_COLOR = Color.WHITE
 		private const val BG_COLOR = Color.TRANSPARENT
 		
