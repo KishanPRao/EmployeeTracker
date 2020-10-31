@@ -2,6 +2,8 @@ package com.kishan.employeetracker.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
@@ -33,9 +35,12 @@ class LaunchActivity : AppCompatActivity() {
 	private lateinit var dataStorage: DataStorage
 	
 	private fun stop() {
-		finish()
-		val intent = Intent(applicationContext, MainActivity::class.java)
-		startActivity(intent)
+//		Wait for shared preferences to store the data.
+		Handler(Looper.getMainLooper()).postDelayed({
+			finish()
+			val intent = Intent(applicationContext, MainActivity::class.java)
+			startActivity(intent)
+		}, 50)
 	}
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
